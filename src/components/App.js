@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -15,15 +15,15 @@ function App() {
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
   }
-
+  
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
   }
-
+  
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true);
   }
-
+  
   function closeAllPopups() {
     setEditProfilePopupOpen(false);
     setEditAvatarPopupOpen(false);
@@ -35,19 +35,18 @@ function App() {
     setSelectedCard(card);
     setImagePopupOpen(true);
   }
-
+  
   return (
     <div className="page">
       <Header />
-      <Main
+      <Main 
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
-        onCardClick={handleCardClick}
-      />
-
+        onCardClick={handleCardClick} />
+      
       <Footer />
-
+      
       <PopupWithForm
         title="Обновить аватар"
         name="avatar"
@@ -129,10 +128,10 @@ function App() {
       <ImagePopup
         card={selectedCard}
         isOpen={isImagePopupOpen}
-        onClose={closeAllPopups}
-      />
+        onClose={closeAllPopups} />
     </div>
   );
 }
 
 export default App;
+
