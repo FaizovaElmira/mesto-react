@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -9,35 +9,45 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [isImagePopupOpen, setImagePopupOpen] = useState(false);
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
   }
-  
+
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
   }
-  
+
   function handleAddPlaceClick() {
     setAddPlacePopupOpen(true);
   }
-  
+
   function closeAllPopups() {
     setEditProfilePopupOpen(false);
     setEditAvatarPopupOpen(false);
     setAddPlacePopupOpen(false);
+    setImagePopupOpen(false);
   }
-  
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+    setImagePopupOpen(true);
+  }
+
   return (
     <div className="page">
       <Header />
-      <Main 
+      <Main
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
+        onCardClick={handleCardClick}
       />
+
       <Footer />
-      
+
       <PopupWithForm
         title="Обновить аватар"
         name="avatar"
@@ -116,10 +126,13 @@ function App() {
         <span className="form__error link-error"></span>
       </PopupWithForm>
 
-      <ImagePopup />
+      <ImagePopup
+        card={selectedCard}
+        isOpen={isImagePopupOpen}
+        onClose={closeAllPopups}
+      />
     </div>
   );
 }
 
 export default App;
-
