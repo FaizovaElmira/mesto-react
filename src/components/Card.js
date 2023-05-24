@@ -9,7 +9,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
     `photo__trash ${isOwn ? 'photo__trash_visible' : ''}`
   );
 
-  const isLiked = card.likes.some(i => i._id === currentUser._id);
+  const isLiked = card.likes.some((item) => item._id === currentUser._id);
   const cardLikeButtonClassName = `photo__like ${isLiked && 'photo__like_active'}`;
 
   function handleClick() {

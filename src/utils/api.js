@@ -54,7 +54,7 @@ class Api {
     }).then(this._checkResponse);
   }
 
-  toggleLike(cardId, isLiked) {
+  changeLikeCardStatus(cardId, isLiked) {
     const method = isLiked ? "PUT" : "DELETE";
     return fetch(`${this.baseUrl}cards/${cardId}/likes`, {
       method,
