@@ -5,12 +5,16 @@ import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 
+import api from '../utils/api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -37,6 +41,7 @@ function App() {
   }
   
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
       <Header />
       <Main 
@@ -130,6 +135,7 @@ function App() {
         isOpen={isImagePopupOpen}
         onClose={closeAllPopups} />
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 
