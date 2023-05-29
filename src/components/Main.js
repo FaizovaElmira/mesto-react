@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../utils/api";
 import Card from "./Card";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import App from "./App";
 
 function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
   const [currentUser, setCurrentUser] = useState({});
@@ -28,11 +28,11 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
       .catch((err) => console.log(err));
   }
 
-  function handleCardDelete(cardId) {
+  function handleCardDelete(card) {
     api
-      .deleteCard(cardId)
+      .deleteCard(card._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id !== cardId));
+        setCards((state) => state.filter((c) => c._id !== card._id));
       })
       .catch((err) => console.log(err));
   }
@@ -69,7 +69,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
       <section className="photo" aria-label="Галерея фотографий">
         <ul className="photo__container">
-          {cards.map((card) => (
+          {cards.map((card) => {
+            return (
             <Card
               key={card._id}
               card={card}
@@ -77,7 +78,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
             />
-          ))}
+          )
+        })}
         </ul>
       </section>
     </main>

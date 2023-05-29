@@ -5,12 +5,10 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
 
   const isOwn = card.owner._id === currentUser._id;
-  const cardDeleteButtonClassName = (
-    `photo__trash ${isOwn ? 'photo__trash_visible' : ''}`
-  );
-
   const isLiked = card.likes.some((item) => item._id === currentUser._id);
-  const cardLikeButtonClassName = `photo__like ${isLiked && 'photo__like_active'}`;
+
+  const cardDeleteButtonClassName = `photo__trash ${isOwn ? 'photo__trash_visible' : ''}`;
+  const cardLikeButtonClassName = `photo__like ${isLiked ? 'photo__like_active' : ''}`;
 
   function handleClick() {
     onCardClick(card);
@@ -21,17 +19,19 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   function handleDeleteClick() {
-    onCardDelete(card._id);
+    onCardDelete(card);
   }
 
   return (
     <li className="photo__item">
+      {isOwn && (
         <button
           className={cardDeleteButtonClassName}
           type="button"
           aria-label="Кнопка удаления"
           onClick={handleDeleteClick}
         ></button>
+      )}
       <img
         className="photo__card"
         src={card.link}
@@ -55,5 +55,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 }
 
 export default Card;
+
 
 
