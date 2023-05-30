@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
@@ -7,8 +7,12 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const isOwn = card.owner._id === currentUser._id;
   const isLiked = card.likes.some((item) => item._id === currentUser._id);
 
-  const cardDeleteButtonClassName = `photo__trash ${isOwn ? 'photo__trash_visible' : ''}`;
-  const cardLikeButtonClassName = `photo__like ${isLiked ? 'photo__like_active' : ''}`;
+  const cardDeleteButtonClassName = `photo__trash ${
+    isOwn ? "photo__trash_visible" : ""
+  }`;
+  const cardLikeButtonClassName = `photo__like ${
+    isLiked ? "photo__like_active" : ""
+  }`;
 
   function handleClick() {
     onCardClick(card);
@@ -55,6 +59,3 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 }
 
 export default Card;
-
-
-

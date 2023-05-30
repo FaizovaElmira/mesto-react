@@ -7,6 +7,4 @@ const config = {
   errorClass: "form__error_visible",
 };
 
-export {
-  config
-};
+export { config };

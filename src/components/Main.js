@@ -1,41 +1,18 @@
-import { useEffect, useState, useContext } from "react";
-import api from "../utils/api";
+import React, { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Card from "./Card";
-import App from "./App";
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
-  const [currentUser, setCurrentUser] = useState({});
-  const [cards, setCards] = useState([]);
+function Main({
+  onEditProfile,
+  onAddPlace,
+  onEditAvatar,
+  onCardClick,
+  cards,
+  onCardLike,
+  onCardDelete,
+}) {
+  const currentUser = useContext(CurrentUserContext);
 
-  useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([user, card]) => {
-        setCurrentUser(user);
-        setCards(card);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some((item) => item._id === currentUser._id);
-    api
-      .changeLikeCardStatus(card._id, !isLiked)
-      .then((newCard) => {
-        setCards((state) =>
-          state.map((c) => (c._id === card._id ? newCard : c))
-        );
-      })
-      .catch((err) => console.log(err));
-  }
-
-  function handleCardDelete(card) {
-    api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
-      })
-      .catch((err) => console.log(err));
-  }
   return (
     <main>
       <section className="profile">
@@ -69,17 +46,15 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
       <section className="photo" aria-label="Галерея фотографий">
         <ul className="photo__container">
-          {cards.map((card) => {
-            return (
+          {cards.map((card) => (
             <Card
               key={card._id}
               card={card}
               onCardClick={onCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
             />
-          )
-        })}
+          ))}
         </ul>
       </section>
     </main>
