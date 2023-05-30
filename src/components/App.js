@@ -15,8 +15,7 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [isPopupWithConfirmationOpen, setPopupWithConfirmationOpen] =
-    useState(false);
+  const [isPopupWithConfirmationOpen, setPopupWithConfirmationOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -29,6 +28,28 @@ function App() {
         setCards(cards);
       })
       .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    function handleEscClose(event) {
+      if (event.key === "Escape") {
+        closeAllPopups();
+      }
+    }
+
+    function handleOverlayClick(event) {
+      if (event.target.classList.contains("popup")) {
+        closeAllPopups();
+      }
+    }
+
+    document.addEventListener("keydown", handleEscClose);
+    document.addEventListener("click", handleOverlayClick);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener("click", handleOverlayClick);
+    };
   }, []);
 
   function handleEditAvatarClick() {
