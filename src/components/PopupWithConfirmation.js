@@ -1,6 +1,11 @@
-import PopupWithForm from './PopupWithForm'
+import PopupWithForm from "./PopupWithForm";
 
-function PopupWithConfirmation({isOpen, onClose, onConfirmation}) {
+function PopupWithConfirmation({
+  isOpen,
+  onClose,
+  onConfirmation,
+  buttonText,
+}) {
   function handleSubmit(event) {
     event.preventDefault();
     onConfirmation();
@@ -9,12 +14,12 @@ function PopupWithConfirmation({isOpen, onClose, onConfirmation}) {
     <PopupWithForm
       title="Вы уверены?"
       name="confirm"
-      buttonText="Да"
+      buttonText={buttonText}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
     />
-  )
+  );
 }
 
-export default PopupWithConfirmation
+export default PopupWithConfirmation;

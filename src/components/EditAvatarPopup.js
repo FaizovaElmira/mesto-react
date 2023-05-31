@@ -1,23 +1,29 @@
-import React, { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, buttonText }) {
   const avatarRef = useRef();
+  const [errorAvatar, setErrorAvatar] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
-    avatarRef.current.value = "";
+    if (isOpen) {
+      avatarRef.current.value = "";
+      setErrorAvatar("");
+      setIsValid(false);
+    }
   }, [isOpen]);
 
   function handleSubmit(event) {
     event.preventDefault();
-
     onUpdateAvatar({
       avatar: avatarRef.current.value,
     });
   }
 
   function handleChange() {
-    return avatarRef.current.value;
+    setErrorAvatar(avatarRef.current.validationMessage);
+    setIsValid(avatarRef.current.validity.valid);
   }
 
   return (
@@ -27,10 +33,11 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText="Сохранить"
+      buttonText={buttonText}
+      isDisabledSubmitButton={!isValid}
     >
       <input
-        className="form__input form__input_type_avatar"
+        className={`form__input ${errorAvatar && "form__input_type_error"}`}
         type="url"
         name="avatar"
         id="avatar"
@@ -39,7 +46,9 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
         onChange={handleChange}
         required
       />
-      <span className="form__error avatar-error"></span>
+      <span className={`form__error ${errorAvatar && "form__error_visible"}`}>
+        {errorAvatar}
+      </span>
     </PopupWithForm>
   );
 }

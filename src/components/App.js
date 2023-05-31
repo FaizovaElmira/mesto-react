@@ -15,11 +15,13 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [isPopupWithConfirmationOpen, setPopupWithConfirmationOpen] = useState(false);
+  const [isPopupWithConfirmationOpen, setPopupWithConfirmationOpen] =
+    useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [isImagePopupOpen, setImagePopupOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getCards()])
@@ -84,6 +86,7 @@ function App() {
   }
 
   function handleUpdateUser(user) {
+    setIsLoading(true);
     api
       .editUserInfo(user)
       .then((user) => {
@@ -92,10 +95,14 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
   function handleUpdateAvatar(user) {
+    setIsLoading(true);
     api
       .updateAvatar(user)
       .then((res) => {
@@ -104,6 +111,9 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -120,6 +130,7 @@ function App() {
   }
 
   function handleCardDelete() {
+    setIsLoading(true);
     const cardId = selectedCard._id;
     api
       .deleteCard(cardId)
@@ -127,10 +138,14 @@ function App() {
         setCards((state) => state.filter((c) => c._id !== cardId));
         closeAllPopups();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
 
   function handleAddCard(newCard) {
+    setIsLoading(true);
     api
       .addCard(newCard)
       .then((res) => {
@@ -139,6 +154,9 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -162,24 +180,28 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
+          buttonText={!isLoading ? "Сохранить" : "Сохранение..."}
         />
 
         <EditProfilePopup
           onUpdateUser={handleUpdateUser}
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
+          buttonText={!isLoading ? "Сохранить" : "Сохранение..."}
         />
 
         <AddPlacePopup
           onAddCard={handleAddCard}
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
+          buttonText={!isLoading ? "Создать" : "Создание..."}
         />
 
         <PopupWithConfirmation
           onConfirmation={handleCardDelete}
           isOpen={isPopupWithConfirmationOpen}
           onClose={closeAllPopups}
+          buttonText={!isLoading ? "Да" : "Удаление..."}
         />
 
         <ImagePopup
