@@ -1,42 +1,29 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
+import useFormAndValidation from "../hooks/useFormAndValidation";
+
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState("");
-  const [errorUsername, setErrorUsername] = useState("");
-  const [description, setDescription] = useState("");
-  const [errorDescription, setErrorDescription] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
+
+  const setIsValid = resetForm;
 
   useEffect(() => {
     if (isOpen) {
-      setName(currentUser.name);
-      setErrorUsername("");
-      setDescription(currentUser.about);
-      setErrorDescription("");
-      setIsValid(true);
+      resetForm({
+        name: currentUser.name || '',
+        about: currentUser.about || '',
+      }, {}, true);
     }
-  }, [currentUser, isOpen]);
-
-  function handleNameChange(event) {
-    setName(event.target.value);
-    setErrorUsername(event.target.validationMessage);
-    setIsValid(event.target.validity.valid);
-  }
-
-  function handleDescriptionChange(event) {
-    setDescription(event.target.value);
-    setErrorDescription(event.target.validationMessage);
-    setIsValid(event.target.validity.valid);
-  }
+  }, [currentUser, isOpen, resetForm]);
 
   function handleSubmit(event) {
     event.preventDefault();
     onUpdateUser({
-      name,
-      about: description,
+      name: values.name,
+      about: values.about,
     });
   }
 
@@ -48,41 +35,41 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
       onClose={onClose}
       buttonText={buttonText}
       onSubmit={handleSubmit}
-      isDisabledSubmitButton={!isValid}
+      isDisabledSubmitButton={!isValid || !values.name || !values.about}
     >
       <input
-        className={`form__input ${errorUsername && "form__input_type_error"}`}
+        className={`form__input ${errors.name && "form__input_type_error"}`}
         type="text"
         name="name"
         id="name"
         placeholder="Имя"
-        value={name}
-        onChange={handleNameChange}
+        value={values.name || ''}
+        onChange={handleChange}
         required
         minLength="2"
         maxLength="40"
       />
-      <span className={`form__error ${errorUsername && "form__error_visible"}`}>
-        {errorUsername}
+      <span className={`form__error ${errors.name && "form__error_visible"}`}>
+        {errors.name}
       </span>
       <input
         className={`form__input ${
-          errorDescription && "form__input_type_error"
+          errors.about && "form__input_type_error"
         }`}
         type="text"
         name="about"
         id="about"
         placeholder="О себе"
-        value={description}
-        onChange={handleDescriptionChange}
+        value={values.about || ''}
+        onChange={handleChange}
         required
         minLength="2"
         maxLength="200"
       />
       <span
-        className={`form__error ${errorDescription && "form__error_visible"}`}
+        className={`form__error ${errors.about && "form__error_visible"}`}
       >
-        {errorDescription}
+        {errors.about}
       </span>
     </PopupWithForm>
   );

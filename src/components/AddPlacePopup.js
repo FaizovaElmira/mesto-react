@@ -1,40 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function AddPlacePopup({ isOpen, onClose, onAddCard, buttonText }) {
-  const [title, setTitle] = useState("");
-  const [errorTitle, setErrorTitle] = useState("");
-  const [link, setLink] = useState("");
-  const [errorLink, setErrorLink] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const { values, errors, isValid, handleChange, resetForm } = useFormAndValidation();
 
   useEffect(() => {
     if (isOpen) {
-      setTitle("");
-      setErrorTitle("");
-      setLink("");
-      setErrorLink("");
-      setIsValid(false);
+      resetForm();
     }
-  }, [isOpen]);
-
-  function handleTitleChange(event) {
-    setTitle(event.target.value);
-    setIsValid(event.target.validity.valid);
-    setErrorTitle(event.target.validationMessage);
-  }
-
-  function handleLinkChange(event) {
-    setLink(event.target.value);
-    setIsValid(event.target.validity.valid);
-    setErrorLink(event.target.validationMessage);
-  }
+  }, [isOpen, resetForm]);
 
   function handleSubmit(event) {
     event.preventDefault();
     onAddCard({
-      name: title,
-      link: link,
+      name: values.title,
+      link: values.link,
     });
   }
 
@@ -49,7 +30,7 @@ function AddPlacePopup({ isOpen, onClose, onAddCard, buttonText }) {
       isDisabledSubmitButton={!isValid}
     >
       <input
-        className={`form__input ${errorTitle && "form__input_type_error"}`}
+        className={`form__input ${errors.title && "form__input_type_error"}`}
         type="text"
         name="title"
         id="title"
@@ -57,11 +38,11 @@ function AddPlacePopup({ isOpen, onClose, onAddCard, buttonText }) {
         required
         minLength="2"
         maxLength="30"
-        value={title}
-        onChange={handleTitleChange}
+        value={values.title || ""}
+        onChange={handleChange}
       />
-      <span className={`form__error ${errorTitle && "form__error_visible"}`}>
-        {errorTitle}
+      <span className={`form__error ${errors.title && "form__error_visible"}`}>
+        {errors.title}
       </span>
       <input
         className="form__input form__input_type_link"
@@ -70,14 +51,15 @@ function AddPlacePopup({ isOpen, onClose, onAddCard, buttonText }) {
         id="link"
         placeholder="Ссылка на картинку"
         required
-        value={link}
-        onChange={handleLinkChange}
+        value={values.link || ""}
+        onChange={handleChange}
       />
-      <span className={`form__error ${errorLink && "form__error_visible"}`}>
-        {errorLink}
+      <span className={`form__error ${errors.link && "form__error_visible"}`}>
+        {errors.link}
       </span>
     </PopupWithForm>
   );
 }
 
 export default AddPlacePopup;
+
